@@ -1,0 +1,62 @@
+<script>
+import wepy from 'wepy';
+import Promise from 'promise-polyfill';
+import 'wepy-async-function'; 
+
+export default class extends wepy.app {
+  config = {
+    pages: [
+      'pages/index',
+    ],
+    window: {
+      backgroundTextStyle: 'light',
+      navigationBarBackgroundColor: '#fff',
+      navigationBarTextStyle: 'black'
+    }
+  };
+  constructor() {
+    super();
+    this.use('promisify');    // 使用Promise
+    this.use('requestfix');   // 修复并发问题
+    //拦截request请求
+    this.intercept('request', {
+      config(p) {
+        console.log(p);
+        // 对所有request请求中的OBJECT参数对象统一附加时间戳属性
+        p.timestamp = +new Date();
+        console.log('config request: ', p);
+        return p;
+      },
+      success(p) {
+        return p;
+      },
+      fail(p) {
+        return p;
+      },
+      complete(p) {}
+    });
+  }
+  onLaunch() {
+    // wepy.login().then(res => {
+    //   console.log(res);
+    // })
+    // console.log(this.getUserInfo()); // 获取用户信息
+    this.getUserInfo()
+  }
+  globalData = {
+    userInfo: null
+  };
+  async getUserInfo() {
+    if (this.globalData.userInfo) {
+      return this.globalData.userInfo;
+    }
+    await wepy.login();
+    let res = await wepy.getUserInfo();
+    this.globalData.userInfo = res.userInfo;
+    return res.userInfo;
+  }
+}
+</script>
+<style>
+
+</style>

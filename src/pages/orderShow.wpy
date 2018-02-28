@@ -1,0 +1,44 @@
+<template lang="wxml">
+  <view>
+   
+  </view>
+</template>
+
+<script>
+import wepy from "wepy";
+import API from '../config.js'
+export default class Home extends wepy.page {
+  config = {
+    // 页面配置文件对应原生的page.json
+  };
+  components = {
+    // 页面的组件列表, 生命所引入的组件列表
+  };
+  data = {
+    // 可用于模板绑定的渲染数据
+  };
+  events = {
+    // wepy组件事件处理函数对象, 存放响应组件之间通过$boardcast\$emit\$invoke,所传递的事件的函数
+  }
+  onLoad(){
+    // 对应小程序的生命周期
+  };
+  onShow(){};
+  computed = {
+    
+  };
+  watch = {
+    
+  };
+  methods= {
+   
+  };
+  events = {
+   
+  };
+}
+</script>
+
+<style>
+
+</style>

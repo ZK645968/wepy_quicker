@@ -1,0 +1,89 @@
+
+<template lang="wxml">
+  <view class="container">
+     <view>
+      <image src="../static/images/logo.png" class='logo'></image>
+    </view>
+    <view class='login_box'>
+      <view class="section">
+      <image src="../static/images/icon_01.png" class='login_ic'></image>
+        <input placeholder="请输入用户名"  bindinput='userNameInput' value="{{userName}}"/>
+      </view>
+      <view class="section">
+      <image src="../static/images/icon_02.png" class='login_ic'></image>
+        <input placeholder="请输入密码"  bindinput='passWordInput' value="{{passWord}}"/>
+      </view>
+      <button class='login_bt' @tap='Login'>确   定</button>
+    </view>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy';
+import API from '../config.js';
+import Http from '../utils/WxHttp.js';
+export default class Index extends wepy.page {
+  data = {
+    userName: '123',
+    passWord: '123'
+  };
+  config = {
+    // navigationBarTitleText: '录单小程序'
+  };
+  methods = {
+    userNameInput: function(e) {
+      this.userName = e.detail.value;
+    },
+    passWordInput: function(e) {
+      this.passWord = e.detail.value;
+    },
+    Login() {
+      if (this.userName == '' || this.passWord == '') {
+        wx.showToast({
+          title: '请填写完整后登陆',
+          icon: 'none'
+        });
+        return;
+      }
+      wx.showLoading({
+        title: '加载中'
+      });
+      console.log(wepy.request, API.Login);
+      Http.$post(API.Login, {
+        user_name: this.userName,
+        password: this.passWord
+      }).then(res => {
+        res = res.data;
+        console.log(res)
+        if (res.code) {
+          this.$parent.globalData.token = res.data.token;
+          wx.hideLoading();
+          setTimeout(function() {
+            wx.showToast({
+              title: '登陆成功'
+            });
+          }, 10);
+          wx.navigateTo({
+            url: '/pages/home/index'
+          });
+        } else {
+          wx.showToast({
+            title: res.msg,
+            icon: 'none'
+          });
+        }
+      });
+    }
+  };
+  onLoad() {
+    wx.setNavigationBarTitle({
+      title: '登录'
+    });
+  }
+  components = {};
+}
+</script>
+
+<style>
+
+</style>
